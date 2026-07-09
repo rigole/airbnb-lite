@@ -6,7 +6,7 @@ type Props = {
     listing: Listing;
 };
 
-export const  ListingCard = ({ listing }: Props) => {
+export const ListingCard = ({ listing }: Props) => {
     return (
         <View style={styles.card}>
             <Image source={{ uri: listing.imageUrl }} style={styles.image} />
