@@ -2,8 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
   StyleSheet,
-  Text,
-  View,
+  FlatList,
   ScrollView,
   SafeAreaView,
 } from "react-native";
@@ -21,9 +20,11 @@ export default function App() {
   return (
     <SafeAreaView style={styles.homeContainer}>
       <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.content}>
-        <ListingCard listing={MOCK_LISTINGS[0]} />
-      </ScrollView>
+      <FlatList
+        data={MOCK_LISTINGS}
+        renderItem={({ item }) => <ListingCard listing={item} />}
+        keyExtractor={(item) => item.id}
+      />
     </SafeAreaView>
   );
 }
