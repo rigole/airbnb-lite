@@ -28,21 +28,20 @@ export const SplashScreen = ({ onFinish }: SplashScreenProps) => {
   return (
     <Animated.View style={styles.container}>
       <StatusBar style="light" />
-      <Animated.Text
-        style={[styles.appName, { opacity, transform: [{ translateY }] }]}
-      >
-        Airbnb-lite
-      </Animated.Text>
+      <Animated.Image
+        source={require('../assets/splash-icon.png')}
+        style={[styles.logo, { opacity, transform: [{ translateY }] }]}
+        resizeMode="contain"
+      />
+      
     </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
-  appName: {
-    fontSize: 32,
-    fontWeight: "700",
-    color: "#fff",
-    letterSpacing: 0.5,
+  logo: {
+   width:140,
+   height:140
   },
   container: {
     flex: 1,

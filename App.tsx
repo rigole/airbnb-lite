@@ -1,14 +1,17 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  FlatList,
-  ScrollView,
-  SafeAreaView,
-} from "react-native";
+import HomeScreen from "./screens/HomeScreen";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { SplashScreen } from "./components/SplashScreen";
-import { ListingCard } from "./components/ListingCard";
-import { MOCK_LISTINGS } from "./data/listings";
+import { StatusBar } from "expo-status-bar";
+import { Listing } from "./types/listing";
+import { WishlistProvider } from "./context/WishlistContext";
+import MainTabs from "./navigation/MainTabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { ListingDetailScreen } from "./screens/ListingDetailScreen";
+import { NavigationContainer } from "@react-navigation/native";
+import { RootStackParamList } from "./types/navigation";
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -18,29 +21,24 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView style={styles.homeContainer}>
+    <SafeAreaProvider>
       <StatusBar style="dark" />
-      <FlatList
-        data={MOCK_LISTINGS}
-        renderItem={({ item }) => <ListingCard listing={item} />}
-        keyExtractor={(item) => item.id}
-      />
-    </SafeAreaView>
+      <WishlistProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="MainTabs"
+              component={MainTabs}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ListingDetail"
+              component={ListingDetailScreen}
+              options={{ title: "" }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </WishlistProvider>
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  homeContainer: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  content: {
-    padding: 16,
-  },
-  homeText: {
-    fontSize: 16,
-    color: "#222",
-  },
-});
