@@ -1,14 +1,23 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import { Listing } from "../types/listing";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../types/navigation";
+import { useNavigation } from "@react-navigation/native";
 
 type Props = {
     listing: Listing;
 };
 
+type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
+
 export const ListingCard = ({ listing }: Props) => {
+    const navigation = useNavigation<NavigationProps>();
     return (
-        <View style={styles.card}>
+        <Pressable
+            style={styles.card}
+            onPress={() => navigation.navigate("ListingDetail", { listing })}
+        >
             <Image source={{ uri: listing.imageUrl }} style={styles.image} />
             <View style={styles.info}>
                 <Text style={styles.title} numberOfLines={1}>
@@ -19,7 +28,7 @@ export const ListingCard = ({ listing }: Props) => {
                     <Text style={styles.priceValue}>${listing.pricePerNight.toFixed(2)}</Text> night
                 </Text>
             </View>
-        </View>
+        </Pressable>
     );
 };
 
@@ -29,7 +38,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '100%',
-       aspectRatio: 1.2,
+        aspectRatio: 1.2,
         borderRadius: 12,
         backgroundColor: '#EBEBEB',
     },
