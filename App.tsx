@@ -4,6 +4,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { SplashScreen } from "./components/SplashScreen";
 import { StatusBar } from "expo-status-bar";
 import { Listing } from "./types/listing";
+import MainTabs from "./navigation/MainTabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ListingDetailScreen } from "./screens/ListingDetailScreen";
 import { NavigationContainer } from "@react-navigation/native";
@@ -23,8 +24,12 @@ export default function App() {
       <StatusBar style="dark" />
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="ListingDetail" component={ListingDetailScreen} options={{ title: '' }}/>
+          <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }}/>
+          <Stack.Screen
+            name="ListingDetail"
+            component={ListingDetailScreen}
+            options={{ title: "" }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
