@@ -1,14 +1,23 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuth } from "../context/AuthContext";
+import LoginScreen from "./LoginScreen";
 
 export default function ProfileScreen() {
+  const { isLoggedIn, session, logOut } = useAuth();
+  if(!isLoggedIn){
+    return <LoginScreen/>
+  }
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Profile</Text>
-      <View style={styles.center}>
-        <Text style={styles.emptyText}>Log in to Manage your profile</Text>
+      <View style={styles.card}>
+        <Text style={styles.name}>Hello, {session?.user.email}</Text>
       </View>
+      <Pressable style={styles.logoutButton} onPress={logOut}>
+        <Text style={styles.logoutText}>Log Out</Text>
+      </Pressable>
     </SafeAreaView>
   );
 }
@@ -24,12 +33,24 @@ const styles = StyleSheet.create({
     color: "#222",
     padding: 16,
   },
-  center: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+  card: {
+    paddingHorizontal: 16
   },
-  emptyText: {
-    color: "#717171",
+  name: {
+    color: "#222",
+    fontSize: 17,
+    fontWeight: '600',
   },
+  logoutButton: {
+    margin: 16,
+    borderWidth:1,
+    borderColor: '#DDDDDD',
+    borderRadius: 10,
+    paddingVertical: 14,
+    alignItems: 'center'
+  },
+  logoutText: {
+    color: '#222',
+    fontWeight: '600'
+  }
 });

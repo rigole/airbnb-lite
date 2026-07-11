@@ -10,6 +10,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ListingDetailScreen } from "./screens/ListingDetailScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { RootStackParamList } from "./types/navigation";
+import { AuthProvider } from "./context/AuthContext";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -23,22 +24,24 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <StatusBar style="dark" />
-      <WishlistProvider>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen
-              name="MainTabs"
-              component={MainTabs}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ListingDetail"
-              component={ListingDetailScreen}
-              options={{ title: "" }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </WishlistProvider>
+      <AuthProvider>
+        <WishlistProvider>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen
+                name="MainTabs"
+                component={MainTabs}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="ListingDetail"
+                component={ListingDetailScreen}
+                options={{ title: "" }}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </WishlistProvider>
+      </AuthProvider>
     </SafeAreaProvider>
   );
 }
