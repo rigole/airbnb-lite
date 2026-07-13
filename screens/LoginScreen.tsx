@@ -8,19 +8,38 @@ export default function LoginScreen() {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [infoMessage, setInfoMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const { signUp, logIn } = useAuth();
+  const { signUp, logIn, session } = useAuth();
 
   const handleSubmit = async () => {
     setError(null);
+    setInfoMessage(null);
     setSubmitting(true);
-    const result =
-      mode === "login"
-        ? await logIn(email, password)
-        : await signUp(email, password);
+
+    if (mode === "signup") {
+      const signUpError = await signUp(email, password);
+      setSubmitting(false);
+
+      if (signUpError) {
+        setError(signUpError);
+        return;
+      }
+      if (!session) {
+        setInfoMessage(
+          `We sent a confirmation link to ${email}, Confirm it and then login`,
+        );
+
+        setMode("login");
+        setPassword("");
+      }
+      return;
+    }
+
+    const loginError = await logIn(email, password);
     setSubmitting(false);
-    if (result) setError(result);
+    if (loginError) setError(loginError);
   };
 
   return (
@@ -28,6 +47,12 @@ export default function LoginScreen() {
       <Text style={styles.title}>
         {mode === "login" ? "Log In" : "Sign up"}
       </Text>
+
+      {infoMessage && (
+        <View style={styles.infoBox}>
+          <Text style={styles.infoText}>{infoMessage}</Text>
+        </View>
+      )}
 
       <TextInput
         placeholder="Email"
@@ -63,9 +88,11 @@ export default function LoginScreen() {
         </Text>
       </Pressable>
 
-      <Pressable onPress={() => setMode(mode === 'login' ? 'signup': 'login')}>
+      <Pressable onPress={() => setMode(mode === "login" ? "signup" : "login")}>
         <Text style={styles.switchText}>
-            {mode === 'login' ? "Dont't have an account? sign Up" : "Already have an account? Sign In"}
+          {mode === "login"
+            ? "Dont't have an account? sign Up"
+            : "Already have an account? Sign In"}
         </Text>
       </Pressable>
     </SafeAreaView>
@@ -113,10 +140,20 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 15,
   },
+  infoText: {
+    color: "#8A5A00",
+    fontSize: 13,
+    lineHeight: 18,
+  },
   switchText: {
     textAlign: "center",
     color: "#717171",
     marginTop: 16,
     fontSize: 13,
+  },
+  infoBox: {
+    backgroundColor: "#FFF4E5",
+    borderRadius: 10,
+    lineHeight: 18,
   },
 });

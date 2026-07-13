@@ -11,6 +11,8 @@ import { ListingDetailScreen } from "./screens/ListingDetailScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { RootStackParamList } from "./types/navigation";
 import { AuthProvider } from "./context/AuthContext";
+import BookingScreen from "./screens/BookingScreen";
+import { TripsProvider } from "./context/TripsContext";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -26,20 +28,27 @@ export default function App() {
       <StatusBar style="dark" />
       <AuthProvider>
         <WishlistProvider>
-          <NavigationContainer>
-            <Stack.Navigator>
-              <Stack.Screen
-                name="MainTabs"
-                component={MainTabs}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="ListingDetail"
-                component={ListingDetailScreen}
-                options={{ title: "" }}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
+          <TripsProvider>
+            <NavigationContainer>
+              <Stack.Navigator>
+                <Stack.Screen
+                  name="MainTabs"
+                  component={MainTabs}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="ListingDetail"
+                  component={ListingDetailScreen}
+                  options={{ title: "" }}
+                />
+                <Stack.Screen
+                  name="Booking"
+                  component={BookingScreen}
+                  options={{ title: "Confirm and Pay" }}
+                />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </TripsProvider>
         </WishlistProvider>
       </AuthProvider>
     </SafeAreaProvider>
