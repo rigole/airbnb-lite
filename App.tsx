@@ -11,37 +11,58 @@ import { ListingDetailScreen } from "./screens/ListingDetailScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { RootStackParamList } from "./types/navigation";
 import { AuthProvider } from "./context/AuthContext";
+import BookingScreen from "./screens/BookingScreen";
+import { TripsProvider } from "./context/TripsContext";
+import { ThemeProvider, useTheme } from "./context/ThemeContext";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
-  const [showSplash, setShowSplash] = useState(true);
+  
+  return(
+    <ThemeProvider>
+      <AppContent/>
+    </ThemeProvider>
+  )
+  
+}
 
-  if (showSplash) {
+function AppContent(){
+const [showSplash, setShowSplash] = useState(true);
+const { colors, isDark } =  useTheme();
+ if (showSplash) {
     return <SplashScreen onFinish={() => setShowSplash(false)} />;
   }
 
   return (
     <SafeAreaProvider>
-      <StatusBar style="dark" />
+      <StatusBar style={isDark ? 'light' : 'dark'}  />
       <AuthProvider>
         <WishlistProvider>
-          <NavigationContainer>
-            <Stack.Navigator>
-              <Stack.Screen
-                name="MainTabs"
-                component={MainTabs}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="ListingDetail"
-                component={ListingDetailScreen}
-                options={{ title: "" }}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
+          <TripsProvider>
+            <NavigationContainer>
+              <Stack.Navigator>
+                <Stack.Screen
+                  name="MainTabs"
+                  component={MainTabs}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="ListingDetail"
+                  component={ListingDetailScreen}
+                  options={{ title: "" }}
+                />
+                <Stack.Screen
+                  name="Booking"
+                  component={BookingScreen}
+                  options={{ title: "Confirm and Pay" }}
+                />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </TripsProvider>
         </WishlistProvider>
       </AuthProvider>
     </SafeAreaProvider>
+
   );
 }

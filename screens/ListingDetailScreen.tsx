@@ -1,13 +1,22 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  Pressable,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
+import { useAuth } from "../context/AuthContext";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ListingDetail">;
 
-export const ListingDetailScreen = ({ route }: Props) => {
+export const ListingDetailScreen = ({ route, navigation }: Props) => {
   const { listing } = route.params;
+  const { isLoggedIn } = useAuth();
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -22,6 +31,18 @@ export const ListingDetailScreen = ({ route }: Props) => {
             night
           </Text>
         </View>
+        <Pressable 
+        style={styles.reserveButton}
+        onPress={() => {
+          if(!isLoggedIn){
+            navigation.navigate('MainTabs', { screen: 'Profile' });
+            return;
+          }
+          navigation.navigate('Booking', { listing })
+        }} 
+        >
+          <Text style={styles.reserveButtonText}>Reserve</Text>
+        </Pressable>
       </ScrollView>
     </SafeAreaView>
   );
@@ -58,5 +79,17 @@ const styles = StyleSheet.create({
   },
   priceValue: {
     fontWeight: "700",
+  },
+  reserveButton: {
+    backgroundColor: "#FF385C",
+    borderRadius: 10,
+    paddingVertical: 14,
+    alignItems: "center",
+    marginTop: 20,
+  },
+  reserveButtonText: {
+    color: "#FFF",
+    fontWeight: "700",
+    fontSize: 15,
   },
 });
