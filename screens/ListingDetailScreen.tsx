@@ -11,35 +11,43 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ListingDetail">;
 
 export const ListingDetailScreen = ({ route, navigation }: Props) => {
   const { listing } = route.params;
   const { isLoggedIn } = useAuth();
+  const { colors } = useTheme();
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <ScrollView>
         <Image source={{ uri: listing.imageUrl }} style={styles.image} />
         <View style={styles.content}>
-          <Text style={styles.title}>{listing.title}</Text>
-          <Text style={styles.location}>{listing.location}</Text>
-          <Text style={styles.price}>
+          <Text style={[styles.title, { color: colors.text }]}>
+            {listing.title}
+          </Text>
+          <Text style={[styles.location, { color: colors.textSecondary }]}>
+            {listing.location}
+          </Text>
+          <Text style={[styles.title, { color: colors.text }]}>
             <Text style={styles.priceValue}>
               ${listing.pricePerNight.toFixed(2)}
             </Text>{" "}
             night
           </Text>
         </View>
-        <Pressable 
-        style={styles.reserveButton}
-        onPress={() => {
-          if(!isLoggedIn){
-            navigation.navigate('MainTabs', { screen: 'Profile' });
-            return;
-          }
-          navigation.navigate('Booking', { listing })
-        }} 
+        <Pressable
+          style={styles.reserveButton}
+          onPress={() => {
+            if (!isLoggedIn) {
+              navigation.navigate("MainTabs", { screen: "Profile" });
+              return;
+            }
+            navigation.navigate("Booking", { listing });
+          }}
         >
           <Text style={styles.reserveButtonText}>Reserve</Text>
         </Pressable>

@@ -6,6 +6,7 @@ import { RootStackParamList } from "../types/navigation";
 import { useNavigation } from "@react-navigation/native";
 import { useWishlist } from "../context/WishlistContext";
 import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "../context/ThemeContext";
 
 type Props = {
   listing: Listing;
@@ -16,6 +17,7 @@ type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 export const ListingCard = ({ listing }: Props) => {
   const navigation = useNavigation<NavigationProps>();
   const { isWishlisted, toggleWishlist } = useWishlist();
+  const { colors, isDark } = useTheme();
   const saved = isWishlisted(listing.id);
   return (
     <Pressable
@@ -39,11 +41,11 @@ export const ListingCard = ({ listing }: Props) => {
           />
         </Pressable>
         <View style={styles.info}>
-          <Text style={styles.title} numberOfLines={1}>
+          <Text  style={[styles.title, { color: colors.text }]} numberOfLines={1}>
             {listing.title}
           </Text>
-          <Text style={styles.location}>{listing.location}</Text>
-          <Text style={styles.price}>
+          <Text  style={[styles.title, { color: colors.text }]}>{listing.location}</Text>
+          <Text  style={[styles.title, { color: colors.textSecondary }]}>
             <Text style={styles.priceValue}>
               ${listing.pricePerNight.toFixed(2)}
             </Text>{" "}

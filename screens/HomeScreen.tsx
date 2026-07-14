@@ -12,9 +12,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { ListingCard } from "../components/ListingCard";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MOCK_LISTINGS } from "../data/listings";
+import { useTheme } from "../context/ThemeContext";
 
 export default function HomeScreen() {
   const [query, setQuery] = useState("");
+  const { colors, isDark } = useTheme();
 
   const filteredListings = MOCK_LISTINGS.filter((listing) =>
     `${listing.title} ${listing.location}`
@@ -23,21 +25,23 @@ export default function HomeScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.homeContainer}>
-      <StatusBar style="dark" />
+    <SafeAreaView
+      style={[styles.homeContainer, { backgroundColor: colors.background }]}
+    >
+      <StatusBar style={isDark ? "light" : "dark"} />
       <FlatList
         data={filteredListings}
         renderItem={({ item }) => <ListingCard listing={item} />}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
           <View style={styles.header}>
-            <Text style={styles.title}>Explore</Text>
-            <View style={styles.searchBar}>
-              <Ionicons name="search" size={20} color="#222" />
+            <Text style={[styles.title, { color: colors.text  }]}>Explore</Text>
+            <View style={[styles.searchBar, { borderColor: colors.inputBorder }]}>
+              <Ionicons name="search" size={20} color={colors.textSecondary} />
               <TextInput
-                style={styles.searchInput}
+                style={[styles.searchInput, { color: colors.text }]}
                 placeholder="Where to?"
-                placeholderTextColor="#717171"
+                placeholderTextColor={colors.textSecondary}
                 value={query}
                 onChangeText={setQuery}
               />

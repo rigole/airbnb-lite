@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/navigation";
 import { useTrips } from "../context/TripsContext";
+import { useTheme } from "../context/ThemeContext";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Booking">;
 
@@ -14,6 +15,7 @@ export default function BookingScreen({ route, navigation }: Props) {
   const { listing } = route.params;
   const { addBooking } = useTrips();
   const [guests, setGuests] = useState(1);
+  const { colors } = useTheme();
   const [confirmed, setConfirmed] = useState(false);
 
   const subtotal = listing.pricePerNight * NIGHTS;
@@ -35,7 +37,7 @@ export default function BookingScreen({ route, navigation }: Props) {
 
   if (confirmed) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container , { backgroundColor: colors.background }]}>
         <View style={styles.center}>
           <Ionicons name="checkmark-circle" size={64} color="#1b7a3d" />
           <Text style={styles.confirmedTitle}>Booking Confirmed!</Text>
@@ -51,10 +53,10 @@ export default function BookingScreen({ route, navigation }: Props) {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>{listing.title}</Text>
-        <Text style={styles.subtitle}>
+        <Text style={[styles.title, { color: colors.text }]}>{listing.title}</Text>
+        <Text style={[styles.subtitle, { color: colors.textSecondary } ]}>
           {NIGHTS} - {listing.location}
         </Text>
 
