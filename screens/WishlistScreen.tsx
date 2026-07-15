@@ -5,11 +5,13 @@ import { MOCK_LISTINGS } from "../data/listings";
 import { useWishlist } from "../context/WishlistContext";
 import ListingCard from "../components/ListingCard";
 import { useTheme } from "../context/ThemeContext";
+import { useListings } from "../context/ListingsContext";
 
 export default function WishlistScreen() {
   const { wishlist } = useWishlist();
   const { colors } = useTheme();
-  const savedListings = MOCK_LISTINGS.filter((listing) =>
+  const { listings } = useListings();
+  const savedListings = listings.filter((listing) =>
     wishlist.includes(listing.id),
   );
   return (
