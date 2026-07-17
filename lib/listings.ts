@@ -28,3 +28,16 @@ export async function fetchListings(): Promise<Listing[]>{
     if(error) throw error;
     return (data as ListingRow[]).map(mapRowToListing);
 }
+
+export async function createListing(input: 
+    {title: string, location: string, pricePerNight: number, image: string, ownerId: string;}
+){
+    const { error } = await supabase.from('listings').insert({
+        title: input.title,
+        location: input.location,
+        price_per_night: input.pricePerNight,
+        image: input.image,
+        owner_id: input.ownerId
+    });
+    if (error) throw error;
+}

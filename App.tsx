@@ -15,6 +15,7 @@ import BookingScreen from "./screens/BookingScreen";
 import { TripsProvider } from "./context/TripsContext";
 import { ListingsProvider } from "./context/ListingsContext";
 import { ThemeProvider, useTheme } from "./context/ThemeContext";
+import CreateListingsScreen from "./screens/CreateListingScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -56,6 +57,11 @@ function AppContent() {
                     name="Booking"
                     component={BookingScreen}
                     options={{ title: "Confirm and Pay" }}
+                  />
+                  <Stack.Screen
+                    name="CreateListings"
+                    component={CreateListingsScreen}
+                    options={{ title: "Create a Listing" }}
                   />
                 </Stack.Navigator>
               </NavigationContainer>
