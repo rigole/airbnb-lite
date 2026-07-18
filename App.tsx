@@ -16,6 +16,7 @@ import { TripsProvider } from "./context/TripsContext";
 import { ListingsProvider } from "./context/ListingsContext";
 import { ThemeProvider, useTheme } from "./context/ThemeContext";
 import CreateListingsScreen from "./screens/CreateListingScreen";
+import MyListingsScreen from "./screens/MyListingsScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -62,6 +63,11 @@ function AppContent() {
                     name="CreateListings"
                     component={CreateListingsScreen}
                     options={{ title: "Create a Listing" }}
+                  />
+                  <Stack.Screen
+                    name="MyListings"
+                    component={MyListingsScreen}
+                    options={{ title: "My Listing" }}
                   />
                 </Stack.Navigator>
               </NavigationContainer>

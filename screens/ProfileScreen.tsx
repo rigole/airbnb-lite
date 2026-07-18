@@ -65,6 +65,10 @@ export default function ProfileScreen({ navigation }: any) {
         </Text>
       </Pressable>
 
+      <Pressable style={[styles.hostButton, { borderColor: colors.border }]} onPress={() => navigation.navigate('MyListings')}>
+        <Text style={[styles.hostButtonText, { color: colors.text }]}>My listings</Text>
+      </Pressable>
+
       <Pressable
         style={[styles.logoutButton, { borderColor: colors.border }]}
         onPress={logOut}
