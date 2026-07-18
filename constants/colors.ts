@@ -1,7 +1,7 @@
 export const lightColors = {
     background: '#FFFFFF',
     surface: '#FFFFFF',
-    text: '#2222',
+    text: '#222222',
     textSecondary: '#717171',
     border: '#EBEBEB',
     inputBorder: '#DDDDDD',

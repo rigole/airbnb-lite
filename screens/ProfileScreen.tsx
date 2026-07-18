@@ -11,7 +11,7 @@ const OPTIONS: { label: string; value: "system" | "light" | "dark" }[] = [
   { label: "Dark", value: "dark" },
 ];
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ navigation }: any) {
   const { isLoggedIn, session, logOut } = useAuth();
   const { colors, override, setOverride } = useTheme();
   if (!isLoggedIn) {
@@ -55,6 +55,19 @@ export default function ProfileScreen() {
           );
         })}
       </View>
+
+      <Pressable
+        style={[styles.hostButton, { borderColor: colors.border }]}
+        onPress={() => navigation.navigate("CreateListings")}
+      >
+        <Text style={[styles.hostButtonText, { color: colors.text }]}>
+          Host your Home
+        </Text>
+      </Pressable>
+
+      <Pressable style={[styles.hostButton, { borderColor: colors.border }]} onPress={() => navigation.navigate('MyListings')}>
+        <Text style={[styles.hostButtonText, { color: colors.text }]}>My listings</Text>
+      </Pressable>
 
       <Pressable
         style={[styles.logoutButton, { borderColor: colors.border }]}
@@ -119,5 +132,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginBottom: 8,
     textTransform: "uppercase",
+  },
+  hostButton: {
+    marginHorizontal: 16,
+    marginTop: 12,
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  hostButtonText: {
+    fontWeight: "600",
   },
 });

@@ -3,11 +3,14 @@ import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
 export default function LoginScreen() {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { colors, isDark } = useTheme();
+
   const [infoMessage, setInfoMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -43,7 +46,9 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <Text style={styles.title}>
         {mode === "login" ? "Log In" : "Sign up"}
       </Text>
@@ -56,19 +61,18 @@ export default function LoginScreen() {
 
       <TextInput
         placeholder="Email"
-        placeholderTextColor="#717171"
+        placeholderTextColor={colors.textSecondary}
         autoCapitalize="none"
         keyboardType="email-address"
-        style={styles.input}
+        style={[styles.input, { color: colors.text }]}
         value={email}
         onChangeText={setEmail}
       />
       <TextInput
         placeholder="Password"
-        placeholderTextColor="#717171"
-        autoCapitalize="none"
+        placeholderTextColor={colors.textSecondary}
         secureTextEntry
-        style={styles.input}
+        style={[styles.input, { color: colors.text }]}
         value={password}
         onChangeText={setPassword}
       />

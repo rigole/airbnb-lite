@@ -4,7 +4,9 @@ import { Listing } from './listing';
 export type RootStackParamList = {
   MainTabs: NavigatorScreenParams<TabParamList>;
   ListingDetail: { listing: Listing };
-  Booking: { listing: Listing }
+  Booking: { listing: Listing },
+  CreateListings: undefined;
+  MyListings: undefined;
 };
 
 export type TabParamList = {

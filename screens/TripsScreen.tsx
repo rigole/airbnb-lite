@@ -2,29 +2,46 @@ import React from "react";
 import { View, Text, Image, StyleSheet, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTrips } from "../context/TripsContext";
+import { useTheme } from "../context/ThemeContext";
 
 export default function TripsScreen() {
   const { bookings } = useTrips();
+  const { colors } = useTheme();
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <Text style={styles.title}>Trips Screen</Text>
       <FlatList
         data={bookings}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.content}
         renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>{item.listing.title}</Text>
-            <Text style={styles.cardSubtitle}>
+          <View
+            style={[
+              styles.card,
+              { borderColor: colors.border, backgroundColor: colors.card },
+            ]}
+          >
+            <Text style={[styles.cardTitle, { color: colors.text }]}>
+              {item.listing.title}
+            </Text>
+            <Text
+              style={[styles.cardSubtitle, { color: colors.textSecondary }]}
+            >
               {item.checkIn} - {item.checkOut} . {item.guests} guest
               {item.guests > 1 ? "s" : ""}
             </Text>
-            <Text style={styles.cardPrice}>${item.totalPrice} total</Text>
+            <Text style={[styles.cardPrice, { color: colors.text }]}>
+              ${item.totalPrice} total
+            </Text>
           </View>
         )}
         ListEmptyComponent={
           <View style={styles.center}>
-            <Text style={styles.emptyText}>No trips booked Yet</Text>
+            <Text style={{ color: colors.textSecondary }}>
+              No trips booked Yet
+            </Text>
           </View>
         }
       />
