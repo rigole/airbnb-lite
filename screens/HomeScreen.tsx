@@ -15,6 +15,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { MOCK_LISTINGS } from "../data/listings";
 import { useTheme } from "../context/ThemeContext";
 import { useListings } from "../context/ListingsContext";
+import {
+  groupListingsByLocation,
+  ListingSection,
+} from "../utils/groupListings";
 
 export default function HomeScreen() {
   const [query, setQuery] = useState("");
@@ -27,6 +31,10 @@ export default function HomeScreen() {
       .includes(query.toLowerCase()),
   );
 
+  const sections = groupListingsByLocation(filteredListings);
+
+  const CARD_WIDTH = 240;
+
   if (loading) {
     return (
       <SafeAreaView
@@ -37,12 +45,19 @@ export default function HomeScreen() {
     );
   }
 
-  if(error){
+  if (error) {
     return (
-      <SafeAreaView style={[styles.homeContainer, { justifyContent: 'center', alignItems: 'center' }]}>
-        <Text style={{ color: colors.textSecondary }}>Could not load listings.</Text>
+      <SafeAreaView
+        style={[
+          styles.homeContainer,
+          { justifyContent: "center", alignItems: "center" },
+        ]}
+      >
+        <Text style={{ color: colors.textSecondary }}>
+          Could not load listings.
+        </Text>
       </SafeAreaView>
-    )
+    );
   }
 
   return (
@@ -52,9 +67,10 @@ export default function HomeScreen() {
       <StatusBar style={isDark ? "light" : "dark"} />
 
       <FlatList
-        data={filteredListings}
-        renderItem={({ item }) => <ListingCard listing={item} />}
-        keyExtractor={(item) => item.id}
+        data={sections}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.content}
+        keyExtractor={(item) => item.location}
         ListHeaderComponent={
           <View style={styles.header}>
             <Text style={[styles.title, { color: colors.text }]}>Explore</Text>
@@ -71,6 +87,28 @@ export default function HomeScreen() {
               />
             </View>
           </View>
+        }
+        renderItem={({ item }: { item: ListingSection }) => (
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+              {item.title}
+            </Text>
+            <FlatList
+              data={item.listings}
+              keyExtractor={(listing) => listing.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.horizontalList}
+              renderItem={({ item: listing }) => (
+                <ListingCard listing={listing} width={CARD_WIDTH} />
+              )}
+            />
+          </View>
+        )}
+        ListEmptyComponent={
+          <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
+            No stays match your search
+          </Text>
         }
       />
     </SafeAreaView>
@@ -119,5 +157,18 @@ const styles = StyleSheet.create({
     marginTop: 16,
     color: "#717171",
     textAlign: "center",
+  },
+  section: {
+    marginBottom: 24,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    paddingHorizontal: 16,
+    marginBottom: 12,
+  },
+  horizontalList: {
+    paddingHorizontal: 16,
+    gap: 16,
   },
 });
