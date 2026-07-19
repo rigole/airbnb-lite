@@ -3,8 +3,17 @@ import { useAuth } from "../context/AuthContext";
 import { useListings } from "../context/ListingsContext";
 import { useTheme } from "../context/ThemeContext";
 import { createListing } from "../lib/listings";
-import { Pressable, ScrollView, StyleSheet, Text, TextInput } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { uploadListingImage } from "../lib/upload";
 
 export default function CreateListingsScreen({ navigation }: any) {
   const { colors } = useTheme();
@@ -14,14 +23,32 @@ export default function CreateListingsScreen({ navigation }: any) {
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
   const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
+  const [imageUri, setImageUri] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  const pickImage = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) {
+      setError("Photo library permission is required");
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.7,
+      aspect: [4, 3],
+      allowsEditing: true,
+    });
+
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+    }
+  };
 
   const handleSubmit = async () => {
     setError(null);
 
-    if (!title || !location || !price || !image) {
+    if (!title || !location || !price || !imageUri) {
       setError("Please fill in every field");
       return;
     }
@@ -37,11 +64,12 @@ export default function CreateListingsScreen({ navigation }: any) {
     }
     setSubmitting(true);
     try {
+      const uploadedUrl = await uploadListingImage(imageUri, session.user.id);
       await createListing({
         title,
         location,
         pricePerNight: priceNumber,
-        image,
+        image: uploadedUrl,
         ownerId: session.user.id,
       });
       await refetch();
@@ -54,54 +82,71 @@ export default function CreateListingsScreen({ navigation }: any) {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.title, { color: colors.text }]}>Host your home</Text>
+        <Text style={[styles.title, { color: colors.text }]}>
+          Host your home
+        </Text>
         <TextInput
           placeholder="Listing title"
           placeholderTextColor={colors.textSecondary}
-          style={[styles.input, { borderColor: colors.inputBorder, color: colors.text }]}
+          style={[
+            styles.input,
+            { borderColor: colors.inputBorder, color: colors.text },
+          ]}
           value={title}
           onChangeText={setTitle}
         />
-         <TextInput
+        <TextInput
           placeholder="Location"
           placeholderTextColor={colors.textSecondary}
-          style={[styles.input, { borderColor: colors.inputBorder, color: colors.text }]}
+          style={[
+            styles.input,
+            { borderColor: colors.inputBorder, color: colors.text },
+          ]}
           value={location}
           onChangeText={setLocation}
         />
-         <TextInput
+        <TextInput
           placeholder="Price per night (USD)"
           placeholderTextColor={colors.textSecondary}
           keyboardType="numeric"
-          style={[styles.input, { borderColor: colors.inputBorder, color: colors.text }]}
+          style={[
+            styles.input,
+            { borderColor: colors.inputBorder, color: colors.text },
+          ]}
           value={price}
           onChangeText={setPrice}
         />
-        <TextInput
-          placeholder="Image Url"
-          placeholderTextColor={colors.textSecondary}
-          keyboardType="numeric"
-          style={[styles.input, { borderColor: colors.inputBorder, color: colors.text }]}
-          value={image}
-          onChangeText={setImage}
-        />
+        <Pressable
+          style={[styles.imagePicker, { borderColor: colors.inputBorder }]}
+          onPress={pickImage}
+        >
+          {imageUri ? (
+            <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+          ) : (
+            <Text style={{ color: colors.textSecondary }}>
+              Tap to choose a photo
+            </Text>
+          )}
+        </Pressable>
 
         {error && <Text style={styles.error}>{error}</Text>}
 
         <Pressable
-        style={[styles.button, submitting && styles.buttonDisabled]}
-        disabled={submitting}
-        onPress={handleSubmit}
+          style={[styles.button, submitting && styles.buttonDisabled]}
+          disabled={submitting}
+          onPress={handleSubmit}
         >
           <Text style={styles.buttonText}>
-            {submitting ? 'Publishing...' : 'Publish listings'}
+            {submitting ? "Publishing..." : "Publish listings"}
           </Text>
         </Pressable>
       </ScrollView>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -128,5 +173,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonDisabled: { opacity: 0.6 },
-  buttonText: { color: "#fff", fontWeight: '700', fontSize: 15 }
+  buttonText: { color: "#fff", fontWeight: "700", fontSize: 15 },
+  imagePicker: {
+    borderWidth: 1,
+    borderRadius: 10,
+    height: 180,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 14,
+    overflow: "hidden",
+  },
+  imagePreview: { width: "100%", height: "100%" },
 });

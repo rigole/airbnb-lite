@@ -10,18 +10,20 @@ import { useTheme } from "../context/ThemeContext";
 
 type Props = {
   listing: Listing;
+  width?: number;
 };
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 
-export const ListingCard = ({ listing }: Props) => {
+export const ListingCard = ({ listing, width }: Props) => {
   const navigation = useNavigation<NavigationProps>();
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { colors, isDark } = useTheme();
   const saved = isWishlisted(listing.id);
+  const isHorizontal = !!width;
   return (
     <Pressable
-      style={styles.card}
+      style={[styles.card, isHorizontal &&  { width, marginBottom: 0, marginRight: 0 } ]}
       onPress={() => navigation.navigate("ListingDetail", { listing })}
     >
       <View style={styles.imageWrap}>
