@@ -17,6 +17,7 @@ import { ListingsProvider } from "./context/ListingsContext";
 import { ThemeProvider, useTheme } from "./context/ThemeContext";
 import CreateListingsScreen from "./screens/CreateListingScreen";
 import MyListingsScreen from "./screens/MyListingsScreen";
+import { LanguageProvider } from "./context/LanguageContext";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -38,43 +39,45 @@ function AppContent() {
   return (
     <SafeAreaProvider>
       <StatusBar style={isDark ? "light" : "dark"} />
-      <AuthProvider>
-        <ListingsProvider>
-          <WishlistProvider>
-            <TripsProvider>
-              <NavigationContainer>
-                <Stack.Navigator>
-                  <Stack.Screen
-                    name="MainTabs"
-                    component={MainTabs}
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen
-                    name="ListingDetail"
-                    component={ListingDetailScreen}
-                    options={{ title: "" }}
-                  />
-                  <Stack.Screen
-                    name="Booking"
-                    component={BookingScreen}
-                    options={{ title: "Confirm and Pay" }}
-                  />
-                  <Stack.Screen
-                    name="CreateListings"
-                    component={CreateListingsScreen}
-                    options={{ title: "Create a Listing" }}
-                  />
-                  <Stack.Screen
-                    name="MyListings"
-                    component={MyListingsScreen}
-                    options={{ title: "My Listing" }}
-                  />
-                </Stack.Navigator>
-              </NavigationContainer>
-            </TripsProvider>
-          </WishlistProvider>
-        </ListingsProvider>
-      </AuthProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <ListingsProvider>
+            <WishlistProvider>
+              <TripsProvider>
+                <NavigationContainer>
+                  <Stack.Navigator>
+                    <Stack.Screen
+                      name="MainTabs"
+                      component={MainTabs}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                      name="ListingDetail"
+                      component={ListingDetailScreen}
+                      options={{ title: "" }}
+                    />
+                    <Stack.Screen
+                      name="Booking"
+                      component={BookingScreen}
+                      options={{ title: "Confirm and Pay" }}
+                    />
+                    <Stack.Screen
+                      name="CreateListings"
+                      component={CreateListingsScreen}
+                      options={{ title: "Create a Listing" }}
+                    />
+                    <Stack.Screen
+                      name="MyListings"
+                      component={MyListingsScreen}
+                      options={{ title: "My Listing" }}
+                    />
+                  </Stack.Navigator>
+                </NavigationContainer>
+              </TripsProvider>
+            </WishlistProvider>
+          </ListingsProvider>
+        </AuthProvider>
+      </LanguageProvider>
     </SafeAreaProvider>
   );
 }

@@ -19,11 +19,12 @@ import {
   groupListingsByLocation,
   ListingSection,
 } from "../utils/groupListings";
-
+import { useLanguage } from "../context/LanguageContext";
 export default function HomeScreen() {
   const [query, setQuery] = useState("");
   const { colors, isDark } = useTheme();
   const { listings, loading, error } = useListings();
+  const { t } = useLanguage();
 
   const filteredListings = listings.filter((listing) =>
     `${listing.title} ${listing.location}`
@@ -73,14 +74,14 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.location}
         ListHeaderComponent={
           <View style={styles.header}>
-            <Text style={[styles.title, { color: colors.text }]}>Explore</Text>
+            <Text style={[styles.title, { color: colors.text }]}>{t('explore.title')}</Text>
             <View
               style={[styles.searchBar, { borderColor: colors.inputBorder }]}
             >
               <Ionicons name="search" size={20} color={colors.textSecondary} />
               <TextInput
                 style={[styles.searchInput, { color: colors.text }]}
-                placeholder="Where to?"
+                placeholder={t('explore.searchPlaceholder')}
                 placeholderTextColor={colors.textSecondary}
                 value={query}
                 onChangeText={setQuery}
@@ -91,7 +92,7 @@ export default function HomeScreen() {
         renderItem={({ item }: { item: ListingSection }) => (
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>
-              {item.title}
+              {t('explore.homesIn', { location: item.location })}
             </Text>
             <FlatList
               data={item.listings}
@@ -107,7 +108,7 @@ export default function HomeScreen() {
         )}
         ListEmptyComponent={
           <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-            No stays match your search
+            {('explore.noResults')}
           </Text>
         }
       />
