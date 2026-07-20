@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
 import LoginScreen from "./LoginScreen";
 import { useTheme } from "../context/ThemeContext";
+import { useLanguage } from "../context/LanguageContext";
 
 const OPTIONS: { label: string; value: "system" | "light" | "dark" }[] = [
   { label: "System", value: "system" },
@@ -14,6 +15,12 @@ const OPTIONS: { label: string; value: "system" | "light" | "dark" }[] = [
 export default function ProfileScreen({ navigation }: any) {
   const { isLoggedIn, session, logOut } = useAuth();
   const { colors, override, setOverride } = useTheme();
+  const { override: langOverride, setOverride: setLangOverride, t } = useLanguage();
+  const LANG_OPTIONS: { label: string; value: 'system' | 'en' | 'fr' }[] = [
+   { label: 'System', value: 'system' },
+   { label: 'EN', value: 'en' },
+   { label: 'FR', value: 'fr' }
+  ];
   if (!isLoggedIn) {
     return <LoginScreen />;
   }
@@ -53,6 +60,24 @@ export default function ProfileScreen({ navigation }: any) {
               </Text>
             </Pressable>
           );
+        })}
+      </View>
+
+      <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>{t('profile.language')}</Text>
+      <View style={[styles.segmentRow, { borderColor: colors.border }]}>
+        {LANG_OPTIONS.map((option) => {
+          const active =langOverride === option.value;
+          return (
+            <Pressable
+              key={option.value}
+              style={[styles.segment, active && { backgroundColor: colors.primary }]}
+              onPress={() => setLangOverride(option.value)}
+            >
+              <Text style={[styles.segmentText, { color: active ? '#fff' : colors.text  }]}>
+                {option.label}
+              </Text>
+            </Pressable>
+          )
         })}
       </View>
 
