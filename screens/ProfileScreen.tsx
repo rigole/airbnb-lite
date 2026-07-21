@@ -15,11 +15,15 @@ const OPTIONS: { label: string; value: "system" | "light" | "dark" }[] = [
 export default function ProfileScreen({ navigation }: any) {
   const { isLoggedIn, session, logOut } = useAuth();
   const { colors, override, setOverride } = useTheme();
-  const { override: langOverride, setOverride: setLangOverride, t } = useLanguage();
-  const LANG_OPTIONS: { label: string; value: 'system' | 'en' | 'fr' }[] = [
-   { label: 'System', value: 'system' },
-   { label: 'EN', value: 'en' },
-   { label: 'FR', value: 'fr' }
+  const {
+    override: langOverride,
+    setOverride: setLangOverride,
+    t,
+  } = useLanguage();
+  const LANG_OPTIONS: { label: string; value: "system" | "en" | "fr" }[] = [
+    { label: "System", value: "system" },
+    { label: "EN", value: "en" },
+    { label: "FR", value: "fr" },
   ];
   if (!isLoggedIn) {
     return <LoginScreen />;
@@ -63,21 +67,31 @@ export default function ProfileScreen({ navigation }: any) {
         })}
       </View>
 
-      <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>{t('profile.language')}</Text>
+      <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>
+        {t("profile.language")}
+      </Text>
       <View style={[styles.segmentRow, { borderColor: colors.border }]}>
         {LANG_OPTIONS.map((option) => {
-          const active =langOverride === option.value;
+          const active = langOverride === option.value;
           return (
             <Pressable
               key={option.value}
-              style={[styles.segment, active && { backgroundColor: colors.primary }]}
+              style={[
+                styles.segment,
+                active && { backgroundColor: colors.primary },
+              ]}
               onPress={() => setLangOverride(option.value)}
             >
-              <Text style={[styles.segmentText, { color: active ? '#fff' : colors.text  }]}>
+              <Text
+                style={[
+                  styles.segmentText,
+                  { color: active ? "#fff" : colors.text },
+                ]}
+              >
                 {option.label}
               </Text>
             </Pressable>
-          )
+          );
         })}
       </View>
 
@@ -86,19 +100,26 @@ export default function ProfileScreen({ navigation }: any) {
         onPress={() => navigation.navigate("CreateListings")}
       >
         <Text style={[styles.hostButtonText, { color: colors.text }]}>
-          Host your Home
+          {t('profile.hostButton')}
         </Text>
       </Pressable>
 
-      <Pressable style={[styles.hostButton, { borderColor: colors.border }]} onPress={() => navigation.navigate('MyListings')}>
-        <Text style={[styles.hostButtonText, { color: colors.text }]}>My listings</Text>
+      <Pressable
+        style={[styles.hostButton, { borderColor: colors.border }]}
+        onPress={() => navigation.navigate("MyListings")}
+      >
+        <Text style={[styles.hostButtonText, { color: colors.text }]}>
+          {t('profile.myListings')}
+        </Text>
       </Pressable>
 
       <Pressable
         style={[styles.logoutButton, { borderColor: colors.border }]}
         onPress={logOut}
       >
-        <Text style={[styles.logoutText, { color: colors.text }]}>Log Out</Text>
+        <Text style={[styles.logoutText, { color: colors.text }]}>
+          {t('profile.logout')}
+        </Text>
       </Pressable>
     </SafeAreaView>
   );
@@ -149,6 +170,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     borderWidth: 1,
     borderRadius: 10,
+    marginBottom: 16,
     overflow: "hidden",
   },
   sectionLabel: {
@@ -156,6 +178,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     paddingHorizontal: 16,
     marginBottom: 8,
+    marginTop:8,
     textTransform: "uppercase",
   },
   hostButton: {

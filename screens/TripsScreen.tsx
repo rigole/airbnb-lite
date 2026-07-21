@@ -3,15 +3,17 @@ import { View, Text, Image, StyleSheet, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTrips } from "../context/TripsContext";
 import { useTheme } from "../context/ThemeContext";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function TripsScreen() {
   const { bookings } = useTrips();
   const { colors } = useTheme();
+  const { t } = useLanguage();
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.background }]}
     >
-      <Text style={styles.title}>Trips Screen</Text>
+      <Text style={[styles.title, { color: colors.text }]}>{t('trips.title')}</Text>
       <FlatList
         data={bookings}
         keyExtractor={(item) => item.id}
@@ -40,7 +42,7 @@ export default function TripsScreen() {
         ListEmptyComponent={
           <View style={styles.center}>
             <Text style={{ color: colors.textSecondary }}>
-              No trips booked Yet
+            {t('trips.empty')}
             </Text>
           </View>
         }
