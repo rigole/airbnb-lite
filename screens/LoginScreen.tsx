@@ -33,7 +33,7 @@ export default function LoginScreen() {
       }
       if (!session) {
         setInfoMessage(
-          `We sent a confirmation link to ${email}, Confirm it and then login`,
+            `${t('login.confirmEmail', { email: email })}`
         );
 
         setMode("login");
