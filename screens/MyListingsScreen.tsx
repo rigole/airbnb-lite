@@ -6,6 +6,7 @@ import { Listing } from "../types/listing";
 import { useEffect, useState } from "react";
 import { deleteListing, fetchListingsByOwnerId } from "../lib/listings";
 import { Ionicons } from "@expo/vector-icons";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function MyListingsScreen() {
   const { colors } = useTheme();
@@ -13,6 +14,7 @@ export default function MyListingsScreen() {
   const { refetch } = useListings();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useLanguage()
 
   const load = async () => {
     if (!session) return;
@@ -27,13 +29,13 @@ export default function MyListingsScreen() {
   }, [session]);
 
   const handleDelete = async (listing: Listing) => {
-    Alert.alert(
-      "Delete Listing",
-      `${listing.title} will be deleted. Are you sure you want to continue?`,
+    Alert.alert( 
+     `${t('myListings.deleteTitle')}`,
+      `${t('myListings.deleteMessage', { title: listing.title  })}`,
       [
-        { text: "Cancel", style: "cancel" },
+        { text: `${t('myListings.cancel')}`, style: "cancel" },
         {
-          text: "Delete",
+          text: `${t('myListings.delete')}`,
           style: "destructive",
           onPress: async () => {
             try {
@@ -65,7 +67,7 @@ export default function MyListingsScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.title, { color: colors.text }]}>My Listings</Text>
+      <Text style={[styles.title, { color: colors.text }]}> {t('myListings.title')}</Text>
       <FlatList 
         data={listings}
         keyExtractor={(item) => item.id}
@@ -76,7 +78,7 @@ export default function MyListingsScreen() {
             <View style={styles.info}>
               <Text style={[styles.cardTitle, { color: colors.text }]} numberOfLines={1}>{item.title}</Text>
               <Text style={[styles.cardSubtitle, { color: colors.textSecondary }]}>{item.location}</Text>
-              <Text style={[styles.cardPrice, { color: colors.text }]}>${item.pricePerNight} / night</Text>
+              <Text style={[styles.cardPrice, { color: colors.text }]}>${item.pricePerNight} / ${t('listingDetail.perNight')}</Text>
             </View>
             <Pressable hitSlop={10} onPress={() => handleDelete(item)}>
               <Ionicons name="trash-outline" size={20} color="#D93025" />
@@ -86,7 +88,7 @@ export default function MyListingsScreen() {
         ListEmptyComponent={
           <View style={styles.center}>
             <Text style={{ color: colors.textSecondary }}>
-              You have not listed any places yet
+              {t('myListings.empty')}
             </Text>
           </View>
         }

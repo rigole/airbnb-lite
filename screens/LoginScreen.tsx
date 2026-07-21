@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function LoginScreen() {
   const [mode, setMode] = useState<"login" | "signup">("login");
@@ -15,6 +16,7 @@ export default function LoginScreen() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const { signUp, logIn, session } = useAuth();
+  const { t } = useLanguage()
 
   const handleSubmit = async () => {
     setError(null);
@@ -50,7 +52,7 @@ export default function LoginScreen() {
       style={[styles.container, { backgroundColor: colors.background }]}
     >
       <Text style={styles.title}>
-        {mode === "login" ? "Log In" : "Sign up"}
+        {mode === "login" ? `${t('login.loginTitle')}` : `${t('signupTitle')}`}
       </Text>
 
       {infoMessage && (
@@ -60,7 +62,7 @@ export default function LoginScreen() {
       )}
 
       <TextInput
-        placeholder="Email"
+        placeholder={t('login.email')}
         placeholderTextColor={colors.textSecondary}
         autoCapitalize="none"
         keyboardType="email-address"
@@ -69,7 +71,7 @@ export default function LoginScreen() {
         onChangeText={setEmail}
       />
       <TextInput
-        placeholder="Password"
+        placeholder={t('login.password')}
         placeholderTextColor={colors.textSecondary}
         secureTextEntry
         style={[styles.input, { color: colors.text }]}
@@ -85,18 +87,18 @@ export default function LoginScreen() {
       >
         <Text style={styles.buttonText}>
           {submitting
-            ? "Please wait..."
+            ? `${t('login.waiting')}`
             : mode === "login"
-              ? "Log In"
-              : "Sign up"}
+              ? `${t('login.loginButton')}`
+              : `${t('login.signupButton')}`}
         </Text>
       </Pressable>
 
       <Pressable onPress={() => setMode(mode === "login" ? "signup" : "login")}>
         <Text style={styles.switchText}>
-          {mode === "login"
-            ? "Dont't have an account? sign Up"
-            : "Already have an account? Sign In"}
+          {mode === "login"  
+            ? `${t('login.switchToSignup')}`
+            : `${t('login.switchToLogin')}`}
         </Text>
       </Pressable>
     </SafeAreaView>
